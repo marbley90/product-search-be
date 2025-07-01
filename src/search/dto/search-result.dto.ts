@@ -1,12 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateProductDto {
-  @ApiProperty()
-  id: string;
-
+export class SearchResultDto {
   @ApiProperty()
   title: string;
 
   @ApiProperty()
-  description: string;
+  score: number;
 }
