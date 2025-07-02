@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -18,6 +24,11 @@ export class ProductsController {
     type: IndexProductsResponseDto,
   })
   async createProducts(@Body() products: CreateProductDto[]) {
-    return this.productsService.indexProducts(products);
+    try {
+      return this.productsService.indexProducts(products);
+    } catch (error) {
+      console.error(`An error occurred during adding products`, error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

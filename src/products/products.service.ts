@@ -7,18 +7,23 @@ export class ProductsService {
   constructor(private readonly elasticService: ElasticService) {}
 
   async indexProducts(products: CreateProductDto[]) {
-    const client = this.elasticService.getClient();
+    try {
+      const client = this.elasticService.getClient();
 
-    const body = products.flatMap((product) => [
-      { index: { _index: "products" } },
-      product,
-    ]);
+      const body = products.flatMap((product) => [
+        {index: {_index: "products"}},
+        product,
+      ]);
 
-    const response = await client.bulk({ body, refresh: true });
+      const response = await client.bulk({body, refresh: true});
 
-    return {
-      indexed: products.length,
-      errors: response.body.errors,
-    };
+      return {
+        indexed: products.length,
+        errors: response.body.errors,
+      };
+    } catch (error) {
+      console.error(`Error during indexing products`, error);
+      throw error;
+    }
   }
 }

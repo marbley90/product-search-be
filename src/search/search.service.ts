@@ -18,27 +18,32 @@ export class SearchService {
 
     const client = this.elasticService.getClient();
 
-    const result: ApiResponse<SearchResponse<Product>> = await client.search({
-      index: "products",
-      body: {
-        query: {
-          multi_match: {
-            // full-text keyword search over product titles and/or descriptions
-            query,
-            fields: ["title^2", "description"],
-            fuzziness: "AUTO", // typo-tolerant search
+    try {
+      const result: ApiResponse<SearchResponse<Product>> = await client.search({
+        index: "products",
+        body: {
+          query: {
+            multi_match: {
+              // full-text keyword search over product titles and/or descriptions
+              query,
+              fields: ["title^2", "description"],
+              fuzziness: "AUTO", // typo-tolerant search
+            },
           },
         },
-      },
-    });
+      });
 
-    const hits = result.body.hits.hits.map((hit) => ({
-      // Return results sorted by relevance score
-      title: hit._source?.title ?? "",
-      score: hit._score,
-    }));
+      const hits = result.body.hits.hits.map((hit) => ({
+        // Return results sorted by relevance score
+        title: hit._source?.title ?? "",
+        score: hit._score,
+      }));
 
-    this.cache.set(query, hits);
-    return hits;
+      this.cache.set(query, hits);
+      return hits;
+    } catch (error) {
+      console.error(`Error during searching products`, error);
+      throw error;
+    }
   }
 }

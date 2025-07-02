@@ -1,4 +1,10 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Query,
+} from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { SearchService } from "./search.service";
 import { SearchResultDto } from "./dto/search-result.dto";
@@ -22,6 +28,14 @@ export class SearchController {
     type: [SearchResultDto],
   })
   async search(@Query("q") q: string) {
-    return this.searchService.searchProducts(q);
+    try {
+      return this.searchService.searchProducts(q);
+    } catch (error) {
+      console.error(
+        `An error occurred during searching products with query ${q}`,
+        error,
+      );
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
