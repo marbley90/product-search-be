@@ -34,7 +34,7 @@ export class SearchService {
       });
 
       const hits = result.body.hits.hits.map((hit) => ({
-        // Return results sorted by relevance score
+        // return results sorted by relevance score
         title: hit._source?.title ?? "",
         score: hit._score,
       }));

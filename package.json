@@ -1,13 +1,13 @@
 {
   "name": "product-search-be",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "product-search-be/node_modules/.bin/nest build",
-    "format": "product-search-be/node_modules/.bin/prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "build": "nest build",
+    "format": "prettier --write \"../src/**/*.ts\" \"../test/**/*.ts\"",
     "seed": "ts-node src/scripts/seed.ts",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",

@@ -11,11 +11,11 @@ export class ProductsService {
       const client = this.elasticService.getClient();
 
       const body = products.flatMap((product) => [
-        {index: {_index: "products"}},
+        { index: { _index: "products" } },
         product,
       ]);
 
-      const response = await client.bulk({body, refresh: true});
+      const response = await client.bulk({ body, refresh: true });
 
       return {
         indexed: products.length,

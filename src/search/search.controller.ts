@@ -29,7 +29,7 @@ export class SearchController {
   })
   async search(@Query("q") q: string) {
     try {
-      return this.searchService.searchProducts(q);
+      return await this.searchService.searchProducts(q);
     } catch (error) {
       console.error(
         `An error occurred during searching products with query ${q}`,

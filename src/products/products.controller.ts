@@ -25,7 +25,7 @@ export class ProductsController {
   })
   async createProducts(@Body() products: CreateProductDto[]) {
     try {
-      return this.productsService.indexProducts(products);
+      return await this.productsService.indexProducts(products);
     } catch (error) {
       console.error(`An error occurred during adding products`, error);
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
