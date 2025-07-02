@@ -9,16 +9,13 @@
     "build": "product-search-be/node_modules/.bin/nest build",
     "format": "product-search-be/node_modules/.bin/prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "seed": "ts-node src/scripts/seed.ts",
-    "start": "product-search-be/node_modules/.bin/nest start",
-    "start:dev": "product-search-be/node_modules/.bin/nest start --watch",
-    "start:debug": "product-search-be/node_modules/.bin/nest start --debug --watch",
+    "start": "nest start",
+    "start:debug": "nest start --debug --watch",
+    "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "lint": "product-search-be/node_modules/.bin/eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "product-search-be/node_modules/.bin/jest",
-    "test:watch": "product-search-be/node_modules/.bin/jest --watch",
-    "test:cov": "product-search-be/node_modules/.bin/jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register product-search-be/node_modules/.bin/jest --runInBand",
-    "test:e2e": "product-search-be/node_modules/.bin/jest --config test/jest-e2e.json"
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:cov": "jest --coverage"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.17.0",
