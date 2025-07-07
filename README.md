@@ -112,3 +112,36 @@ These tests cover:
 - Not designed for multi-user scaling without external cache (e.g., Redis)
 - Analytics tracking (e.g., query frequency, response time) is not implemented (This could be added by integrating a lightweight service or Prometheus-compatible metrics layer.)
 ```
+
+## Version History
+
+### v1.1.0
+
+- Fixed bug where `SeederService` threw `index_not_found_exception` during initial boot
+- Root cause: `client.indices.exists()` was returning an object (`{ body: boolean }`) instead of a raw boolean
+- Fix: Destructured `.body` from response:
+
+  ```ts
+  const { body: indexExists } = await client.indices.exists({ index: 'products' });
+    ```
+  
+### v1.0.0
+
+Initial implementation of the core project requirements:
+
+- RESTful API built with Node.js and Elasticsearch:
+    GET /search?q=...,
+    Returns a list of product matches (title + relevance score)
+
+- POST /products,
+Accepts one or more product JSONs ({ id, title, description }) and indexes them
+
+- Uses Elasticsearch to:
+  1. Index a product catalog (1,000+ items via Faker.js)
+  2. Perform full-text keyword search on product titles and descriptions 
+  3. Return results sorted by relevance score using _score
+
+- Swagger API docs at /api
+- LRU cache for top 10 search queries
+- Auto-seeding logic at app startup
+- Unit tests

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ElasticService } from "../elastic/elastic.service";
 import { faker } from "@faker-js/faker";
+import { Client } from "@elastic/elasticsearch";
 
 @Injectable()
 export class SeederService {
@@ -11,9 +12,14 @@ export class SeederService {
   async seedProducts(count = 1000): Promise<void> {
     const client = this.elasticService.getClient();
 
+    await this.waitForElasticsearch(client);
+
     try {
-      const indexExists = await client.indices.exists({ index: "products" });
+      const { body: indexExists } = await client.indices.exists({
+        index: "products",
+      });
       if (!indexExists) {
+        this.logger.log('Creating "products" index...');
         await client.indices.create({ index: "products" });
       }
 
@@ -50,5 +56,23 @@ export class SeederService {
       this.logger.error("Failed during seeding check or operation.", error);
       throw error;
     }
+  }
+
+  private async waitForElasticsearch(
+    client: Client,
+    retries = 10,
+    delayMs = 2000,
+  ): Promise<void> {
+    for (let i = 0; i < retries; i++) {
+      try {
+        await client.ping();
+        this.logger.log("Elasticsearch is ready.");
+        return;
+      } catch {
+        this.logger.warn(`Waiting for Elasticsearch... (${i + 1}/${retries})`);
+        await new Promise((res) => setTimeout(res, delayMs));
+      }
+    }
+    throw new Error("Elasticsearch not available after multiple attempts.");
   }
 }
